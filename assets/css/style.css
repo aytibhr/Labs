@@ -1,0 +1,741 @@
+/* ===========================
+   Namavi Labs — Base Styles
+   =========================== */
+
+:root{
+  --bg: #F3F6FA;
+  --text: #0F172A;
+  --muted: #6B7280;
+  --brand: #34D399;
+  --brand-2: #22C1C3;
+  --border: #E2E8F0;
+  --card: #FFFFFF;
+  --shadow: 0 12px 28px rgba(15,23,42,.08), 0 2px 6px rgba(15,23,42,.06);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  overflow:hidden;            /* Only the right side scrolls */
+}
+
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+
+/* ===========================
+   Layout (Desktop default)
+   =========================== */
+
+.layout{
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr);
+  min-height:100vh;
+  align-items:start;
+}
+
+.sidebar{
+  background:var(--card);
+  border-right:1px solid var(--border);
+  width:260px;
+  height:100vh;
+  position:sticky;
+  top:0;
+  overflow-y:auto;
+  padding:16px 16px 20px;
+  z-index:1001;
+}
+.sidebar .logo-wrap{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.sidebar .logo-wrap img{ height:36px; width:auto; }
+
+.sidebar-menu{ list-style:none; padding:0; margin:10px 0 0; }
+.sidebar-menu li{ margin:6px 0; }
+.sidebar-menu a{ display:block; padding:10px 12px; border-radius:10px; color:#111827; }
+.sidebar-menu a:hover{ background:#F1F5F9; }
+
+/* Active highlight */
+.sidebar-menu a.active,
+.sidebar-menu a[aria-current="page"]{
+  background:#E6FFFA;
+  color:#0F172A;
+  font-weight:700;
+  box-shadow: inset 3px 0 0 #34D399;  /* left accent */
+}
+
+.sidebar .menu-divider{ height:1px; background:var(--border); margin:14px 0; }
+.sidebar .sidebar-footer .user-info small{ color:var(--muted); display:block; }
+
+.logout-btn{
+  display:block; margin-top:10px; text-align:center;
+  padding:10px 12px; border-radius:12px; background:#EDF2F7;
+}
+
+.main-content{
+  min-height:100vh;
+  overflow:auto;                /* scroll on the right only */
+  padding:24px;
+}
+.main-content > :first-child{ margin-top:0; }  /* avoid collapsed margin gap */
+
+/* Mobile topbar hidden on desktop */
+.topbar{ display:none; }
+
+/* ===========================
+   Cards / Buttons / Inputs
+   =========================== */
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+.card + .card{ margin-top:18px; }
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:44px; padding:0 14px; border:0; border-radius:12px;
+  font-weight:700; letter-spacing:.2px; cursor:pointer;
+  background:#EDF2F7; color:#111827;
+}
+.btn-primary{
+  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color:#0B2C2C;
+  box-shadow:0 12px 22px rgba(79,209,197,.28);
+}
+.btn-sm{ height:36px; border-radius:10px; padding:0 10px; }
+
+.form-control{
+  width:100%; height:42px; padding:10px 12px;
+  border:1px solid var(--border); border-radius:10px;
+  background:#fff; color:var(--text);
+}
+
+/* ===========================
+   Tables (row-wise on desktop)
+   =========================== */
+
+.table-container{ width:100%; overflow-x:auto; }
+.responsive-table{ width:100%; border-collapse:collapse; }
+.responsive-table th, .responsive-table td{
+  text-align:left; padding:12px 12px; white-space:nowrap;
+  border-bottom:1px solid var(--border);
+  color:#111827;
+}
+.responsive-table thead th{ font-weight:700; color:#334155; }
+.responsive-table tr:hover td{ background:#FAFAFA; }
+
+/* ===========================
+   Global overlay defaults
+   (so it never blocks desktop)
+   =========================== */
+
+.mobile-menu-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.35);
+  opacity:0; visibility:hidden;
+  pointer-events:none;                 /* non-interactive by default */
+  transition:opacity .2s ease;
+  z-index:1000;
+}
+.mobile-menu-overlay.visible{
+  opacity:1; visibility:visible;
+  pointer-events:auto;                 /* only interactive when visible */
+}
+/* On desktop, ensure it never shows/catches clicks even if markup exists */
+@media (min-width: 992px){
+  .mobile-menu-overlay{ display:none !important; }
+}
+
+/* ===========================
+   Mobile (≤ 991px)
+   =========================== */
+
+@media (max-width:991px){
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:1002;
+    background:#fff; border-bottom:1px solid var(--border);
+    padding:10px 12px;
+  }
+  .mobile-menu-toggle{
+    display:inline-grid; place-items:center;
+    width:42px; height:42px; border-radius:10px; background:#EDF2F7;
+  }
+
+  .layout{ grid-template-columns:1fr; }
+  .sidebar{
+    position:fixed; left:0; top:0; width:260px; height:100vh;
+    transform:translateX(-105%);
+    transition:transform .25s ease-in-out;
+    box-shadow:0 12px 28px rgba(15,23,42,.12);
+  }
+  .sidebar.sidebar-visible{ transform:translateX(0); }
+
+  .main-content{ padding:16px; padding-top:72px; }
+
+}
+
+/* ===========================
+   Z-index sanity
+   =========================== */
+.topbar{ z-index:1002; }
+.sidebar{ z-index:1001; }
+.mobile-menu-overlay{ z-index:1000; }
+
+/* Utilities */
+.text-center{ text-align:center; }
+.text-muted{ color:var(--muted); }
+.badge{ display:inline-block; padding:4px 8px; border-radius:999px; background:#F1F5F9; }
+
+/* --- Right pane scroll fix (desktop + mobile) --- */
+.layout { height: 100vh !important; }               /* fixed grid height */
+.main-content{
+  height: 100vh !important;                         /* make it a viewport-sized pane */
+  overflow-y: auto !important;                      /* scroll here */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: subtract sticky topbar height */
+@media (max-width: 991px){
+  .main-content{
+    height: calc(100vh - 72px) !important;
+  }
+}
+
+/* Overlay must NOT block clicks unless visible */
+.mobile-menu-overlay{ pointer-events:none; }
+.mobile-menu-overlay.visible{ pointer-events:auto; }
+/* Keep toggle above overlay */
+.topbar{ z-index:1002; }
+.sidebar{ z-index:1001; }
+.mobile-menu-overlay{ z-index:1000; }
+
+/* ==== Mobile card view for .responsive-table ==== */
+@media (max-width: 991px){
+  .table-container{ overflow: visible; }
+
+  /* Hide header row on mobile; we'll show labels per cell */
+  .responsive-table thead { display: none; }
+
+  /* Turn each row into a card */
+  .responsive-table,
+  .responsive-table tbody,
+  .responsive-table tr,
+  .responsive-table td { display: block; width: 100%; }
+
+  .responsive-table tr{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 8px 10px;
+    margin-bottom: 12px;
+  }
+
+  .responsive-table td{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 6px;
+    border-bottom: 1px dashed #EEF2F7;
+    white-space: normal;        /* let content wrap */
+  }
+  .responsive-table td:last-child{ border-bottom: 0; }
+
+  /* Show the column header before each value via data-label */
+  .responsive-table td::before{
+    content: attr(data-label);
+    font-weight: 700;
+    color: #475569;
+    margin-right: 12px;
+    flex: 0 0 46%;
+  }
+
+  /* Value side */
+  .responsive-table td > * { flex: 1; text-align: right; }
+
+  /* Action cell (edit/delete buttons) */
+  .responsive-table td.actions{
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .responsive-table td.actions::before{ content: ""; } /* no label for actions */
+}
+
+/* === Mobile card spacing for all .responsive-table lists === */
+@media (max-width: 991px){
+  /* Space between search/filter controls and the first card */
+  .table-container,
+  .responsive-table{ 
+    margin-top: 14px;              /* creates gap after inputs/selects */
+  }
+
+  /* Card spacing */
+  .responsive-table tr{
+    margin: 12px 0 16px;           /* vertical gaps between cards */
+    padding: 10px 12px;            /* a touch more internal air */
+  }
+  .responsive-table tr:first-child{ margin-top: 16px; }
+  .responsive-table tr:last-child{  margin-bottom: 24px; } /* bottom breathing room */
+  
+  /* Extra bottom padding so last card doesn't stick to screen edge */
+  .main-content{ padding-bottom: 72px; }
+}
+
+/* Mobile: guaranteed gap before the first card and after the last */
+@media (max-width: 991px){
+  .responsive-table tbody{
+    display: block;          /* already set, but safe to assert */
+    padding-top: 14px;       /* space ABOVE first card */
+    padding-bottom: 20px;    /* space BELOW last card */
+  }
+  .responsive-table tr{
+    margin: 12px 0 16px;     /* spacing between cards */
+    padding: 10px 12px;
+  }
+}
+
+/* Ensure hamburger is ALWAYS clickable on mobile (even above plugins/overlays) */
+@media (max-width: 991px){
+  .mobile-menu-toggle{
+    position: relative;
+    z-index: 2147483647;          /* top of the world */
+    pointer-events: auto !important;
+  }
+  /* Overlay only blocks clicks when visible */
+  .mobile-menu-overlay{ display: none; pointer-events: none; }
+  .mobile-menu-overlay.visible{ display: block; pointer-events: auto; }
+}
+
+/* Force topbar/hamburger above any dashboard overlays (date pickers, charts, etc.) */
+@media (max-width: 991px){
+  .topbar{
+    position: fixed !important;
+    top: 0; left: 0; right: 0;
+    z-index: 2147483646 !important; /* just under the button */
+  }
+  .mobile-menu-toggle{
+    position: relative !important;
+    z-index: 2147483647 !important; /* very top */
+    pointer-events: auto !important;
+  }
+  /* keep content clear of the fixed topbar */
+  .main-content{ padding-top: 72px !important; }
+  /* overlay only interactive when visible */
+  .mobile-menu-overlay{ display: none; pointer-events: none; }
+  .mobile-menu-overlay.visible{ display: block; pointer-events: auto; }
+}
+
+/* Overlay should only catch clicks when visible */
+.mobile-menu-overlay { pointer-events: none; }
+.mobile-menu-overlay.visible { pointer-events: auto; }
+
+/* === Always keep topbar/hamburger clickable above any page overlays (mobile) === */
+@media (max-width: 991px){
+  .topbar{
+    position: fixed !important;
+    top: 0; left: 0; right: 0;
+    z-index: 3000 !important;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu-toggle{
+    position: relative !important;
+    z-index: 3001 !important; /* top-most */
+    pointer-events: auto !important;
+  }
+  /* Overlay only interactive when visible */
+  .mobile-menu-overlay{ display:none; pointer-events:none; }
+  .mobile-menu-overlay.visible{ display:block; pointer-events:auto; }
+  /* keep content clear of the fixed topbar */
+  .main-content{ padding-top: 72px !important; }
+  /* Litepicker should never cover the topbar */
+  .litepicker{ z-index: 2500 !important; }
+}
+
+/* === Filter bar & buttons polish (all pages) === */
+.filter-bar{
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  margin-top: 6px; margin-bottom: 10px;
+}
+.filter-bar .form-control{ max-width: 260px; }
+@media (max-width: 991px){
+  .filter-bar .form-control{ max-width: 100%; flex: 1 1 200px; }
+  .filter-bar .btn{ width: auto; }
+}
+
+/* Buttons: clearer hover/focus */
+.btn{ transition: transform .04s ease, box-shadow .12s ease; }
+.btn:active{ transform: translateY(1px); }
+.btn:focus-visible{ outline: 2px solid #34D39955; outline-offset: 2px; }
+.btn-primary:hover{ filter: brightness(0.98); }
+
+/* Card header spacing */
+.card-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 8px; }
+.card-body{ padding-top: 8px; }
+
+/* Stats grid tidy */
+.stats-grid{
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+}
+@media (max-width: 991px){
+  .stats-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+.stat-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+/* === Mobile card view spacing (all .responsive-table) === */
+@media (max-width: 991px){
+  .responsive-table thead{ display:none; }
+  .responsive-table,
+  .responsive-table tbody,
+  .responsive-table tr,
+  .responsive-table td{ display:block; width:100%; }
+
+  .responsive-table tbody{
+    padding-top: 14px;       /* gap before the first card */
+    padding-bottom: 24px;    /* gap after the last card */
+  }
+  .responsive-table tr{
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin: 12px 0 16px;
+    padding: 12px 12px;
+  }
+  .responsive-table td{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 10px 6px; border-bottom: 1px dashed #EEF2F7; white-space: normal;
+  }
+  .responsive-table td:last-child{ border-bottom: 0; }
+  .responsive-table td::before{
+    content: attr(data-label);
+    font-weight: 700; color: #475569; margin-right: 12px; flex: 0 0 46%;
+  }
+  .responsive-table td > *{ flex: 1; text-align: right; }
+  .responsive-table td.actions{ display:flex; gap:8px; justify-content:flex-end; align-items:center; }
+  .responsive-table td.actions::before{ content: ""; }
+}
+
+/* === Ensure the right pane actually scrolls (desktop + mobile) === */
+.layout { height: 100vh !important; }
+.main-content{
+  height: 100vh !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 991px){
+  .main-content{ height: calc(100vh - 72px) !important; }
+}
+
+/* DASHBOARD: make sure nothing blocks the top-left toggle area on mobile */
+@media (max-width: 991px){
+  .topbar{ position: fixed !important; top:0; left:0; right:0; z-index: 3000 !important; }
+  .mobile-menu-toggle{ position: relative !important; z-index: 3001 !important; }
+
+  /* date picker should sit BELOW the topbar */
+  .litepicker{ z-index: 2500 !important; }
+}
+
+/* Chart.js sometimes injects a full-card monitor DIV; make it click-through */
+.chartjs-size-monitor,
+.chartjs-size-monitor-expand,
+.chartjs-size-monitor-shrink{ pointer-events: none !important; }
+
+/* Make taps immediate on mobile buttons (prevents any 300ms delays) */
+.mobile-menu-toggle { touch-action: manipulation; }
+
+/* Create Bill — standout button at the top of the sidebar */
+.sidebar .create-bill-btn{
+  display:block;
+  width:100%;
+  padding:12px 16px;
+  border-radius:14px;
+  font-weight:700;
+  text-align:center;
+  text-decoration:none;
+  color:#fff !important;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%); /* teal → aqua */
+  box-shadow: 0 10px 18px rgba(16,185,129,.15);
+  transition: transform .12s ease, box-shadow .2s ease, filter .15s ease;
+}
+.sidebar .create-bill-btn:hover{
+  transform: translateY(-1px);
+  filter: brightness(.98);
+  box-shadow: 0 14px 22px rgba(16,185,129,.22);
+}
+.sidebar .create-bill-btn:active{
+  transform: translateY(0);
+  filter: brightness(.96);
+}
+.sidebar .create-bill-btn:focus-visible{
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+/* Optional: keep it “stuck” near the top when the sidebar scrolls */
+.sidebar .create-bill-item{
+  position: sticky;
+  top: 8px;
+  z-index: 2;
+  margin-bottom: 12px;
+}
+
+/* Make sure generic sidebar link styles don't override it */
+.sidebar .sidebar-menu a.create-bill-btn.active{
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%) !important;
+  color: #fff !important;
+}
+
+/* Make the topbar a simple flex row */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Use whichever element you have:
+   - .topbar .logo  (if it's a div with an <img> inside)
+   - .topbar-logo-mobile (if you added an <img> directly)
+   Both are right-aligned, icon-only, and mobile-only. */
+
+/* Default hidden on desktop */
+.topbar .logo,
+.topbar-logo-mobile{
+  display:none;
+}
+
+/* Mobile only: show icon on the FAR RIGHT */
+@media (max-width: 991px){
+  .topbar .logo{
+    display:flex;
+    align-items:center;
+    margin-left:auto;          /* pushes it to the right */
+  }
+  .topbar .logo img{ 
+    height:28px; width:auto; 
+    display:block;
+  }
+
+  /* If you used <img class="topbar-logo-mobile"> instead of .logo */
+  .topbar-logo-mobile{
+    display:block;
+    height:28px; width:auto;
+    margin-left:auto;          /* pushes it to the right */
+  }
+}
+
+/* Hide mobile hamburger on desktop */
+@media (min-width: 992px){
+  .mobile-menu-toggle{
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  /* if you added a mobile-only logo in the top bar */
+  .topbar-logo-mobile{ display: none !important; }
+}
+
+/* Add breathing room above the Create New Bill button in the sidebar */
+.sidebar .create-bill-link {
+  display: block;
+  margin-top: 15px;   /* space below header */
+}
+
+.sidebar .create-bill-link a {
+  display: block;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #22c1c3, #29ffc6);
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+.sidebar .create-bill-link a:hover {
+  opacity: 0.9;
+}
+
+/* DASHBOARD: header layout */
+.card .card-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:18px 20px 10px;
+}
+
+/* Title stays left, filter bar hugs the right */
+.card .card-header h3{
+  margin:0;
+  margin-right:auto; /* pushes filter bar to the right on desktop */
+}
+
+/* Filter bar: desktop = row; mobile = stack */
+.filter-bar{
+  display:grid;
+  grid-template-columns: 1fr auto;  /* input | button */
+  gap:12px;
+  align-items:center;
+  min-width: 360px;
+  width: min(520px, 42vw);          /* responsive width on desktop */
+}
+
+/* Inputs/buttons height & look */
+#dateRange{
+  height:42px;
+  padding:0 12px;
+  border-radius:10px;
+}
+
+#applyRange.btn, .filter-bar .btn{
+  height:42px;
+  padding:0 18px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+/* Mobile: stack neatly, full width */
+@media (max-width: 991px){
+  .card .card-header{
+    flex-direction:column;
+    align-items:stretch;
+    gap:12px;
+  }
+  .filter-bar{
+    width:100%;
+    min-width:auto;
+    grid-template-columns: 1fr;     /* input on its own row */
+  }
+  #applyRange.btn, .filter-bar .btn{
+    width:100%;
+  }
+}
+
+/* Keep Actions visible and make the icon buttons look like buttons */
+.responsive-table td.actions{
+  text-align:right;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+
+.responsive-table td.actions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px; height:36px;
+  margin-left:8px;
+  border:1px solid #e5e7eb;      /* slate-200 */
+  border-radius:10px;
+  background:#f8fafc;            /* slate-50 */
+  color:#0f172a;                  /* slate-900 */
+  transition:transform .12s ease, box-shadow .15s ease, background .15s ease;
+}
+.responsive-table td.actions a:hover{
+  transform: translateY(-1px);
+  box-shadow:0 6px 14px rgba(2,6,23,.08);
+}
+.responsive-table td.actions a .fa-solid{ font-size:14px; }
+
+/* optional semantic tints */
+.responsive-table td.actions a[title="Edit"]{
+  background:#ecfeff; border-color:#a5f3fc; color:#0369a1;
+}
+.responsive-table td.actions a.btn-link-danger{
+  background:#fff1f2; border-color:#fecdd3; color:#be123c;
+}
+
+/* Mobile card view: keep label + buttons readable */
+@media (max-width: 991px){
+  .responsive-table td.actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-start;
+  }
+  .responsive-table td.actions::before{
+    content: attr(data-label);
+    flex:0 0 40%;
+    max-width:40%;
+    color:#64748b; font-weight:600;
+  }
+}
+
+/* Actions column layout */
+.responsive-table td.actions{
+  padding-right: 16px;
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Icon buttons */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;        /* slightly smaller for tighter look */
+  height: 36px;
+  border-radius: 8px;
+  margin-left: 6px;
+  border: 1px solid #e6eef5;
+  background: #f8fbff;
+  color: #0f172a;
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.icon-btn svg {
+  width: 18px;   /* makes icons visually balanced inside */
+  height: 18px;
+  display: block;
+}
+
+.icon-btn.edit {
+  background: #ecfeff;
+  border-color: #a5f3fc;
+  color: #0369a1;
+}
+
+.icon-btn.delete {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(2, 6, 23, .08);
+}
+
+
+/* Mobile card view: show label + actions nicely */
+@media (max-width: 991px){
+  .responsive-table td.actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-start;
+  }
+  .responsive-table td.actions::before{
+    content: attr(data-label);
+    flex: 0 0 42%;
+    max-width: 42%;
+    color:#64748b;
+    font-weight:600;
+  }
+}
+
